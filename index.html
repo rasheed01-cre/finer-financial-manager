@@ -52,7 +52,8 @@
     @media(max-width:360px){
       main{padding-left:12px;padding-right:12px}
       .nav{grid-template-columns:repeat(6,minmax(0,1fr))}
-      .nav button{font-size:7px;white-space:nowrap;overflow:hidden}
+      .nav button{font-size:7px;line-height:1.1;white-space:nowrap;overflow:hidden;gap:2px}
+      .nav button span{display:block;max-width:100%;overflow:hidden;text-overflow:clip}
       .cards{gap:7px}
       .card{padding:12px 10px}
       .metric-value{font-size:17px}
@@ -88,7 +89,7 @@ function monthTx(){return data.transactions.filter(t=>{const d=new Date(t.date+'
 
 function showFlowTip(event,bar){event.stopPropagation();const tip=bar.ownerSVGElement.querySelector('.chart-tooltip');tip.setAttribute('transform',`translate(${bar.dataset.tipX} ${bar.dataset.tipY})`);const value=tip.querySelector('.chart-tip-value');value.textContent=bar.dataset.amount;value.setAttribute('fill',bar.getAttribute('fill'));tip.setAttribute('visibility','visible')}
 function hideFlowTip(event,svg){if(event.type==="pointerleave"||event.target===svg||event.target.classList.contains("gridline")||event.target.classList.contains("axis-label"))svg.querySelector(".chart-tooltip").setAttribute("visibility","hidden")}
-function populateNav(){document.getElementById('nav').innerHTML=navItems.map(n=>`<button class="${n===active?'active':''}" data-page="${n}"><svg viewBox="0 0 24 24">${icons[n]}</svg>${n}</button>`).join('');document.getElementById('nav').querySelectorAll('button').forEach(b=>b.onclick=()=>go(b.dataset.page))}
+function populateNav(){document.getElementById('nav').innerHTML=navItems.map(n=>`<button class="${n===active?'active':''}" data-page="${n}"><svg viewBox="0 0 24 24">${icons[n]}</svg><span>${n}</span></button>`).join('');document.getElementById('nav').querySelectorAll('button').forEach(b=>b.onclick=()=>go(b.dataset.page))}
 function populateMonths(){const sel=document.getElementById('monthSelect');sel.innerHTML=Array.from({length:12},(_,i)=>{const d=new Date(chosenYear,i,1);return `<option value="${i}" ${i===chosenMonth?'selected':''}>${d.toLocaleDateString('en-GB',{month:'long',year:'numeric'})}</option>`}).join('');sel.onchange=()=>{chosenMonth=Number(sel.value);render()}}
 function go(n){active=n;populateNav();render()}function toast(s){const r=document.getElementById('toastRoot');r.innerHTML=`<div class="toast">${esc(s)}</div>`;setTimeout(()=>r.innerHTML='',2600)}
 function metric(label,val,icon,foot,accent=''){return `<div class="card"><div class="metric-top">${label}<span class="metric-icon ${accent}"><svg viewBox="0 0 24 24">${icon}</svg></span></div><div class="metric-value ${accent}">${money(val)}</div><div class="metric-foot">${foot}</div></div>`}
